@@ -32,7 +32,6 @@ def extup_summary(doc, model, k=None):
         C = Cn
     return [sents[i] for i in sorted(np.argsort(C)[-k:])]
 
-# ---------- 生成摘要（使用 GPT 替代硅基 API） ----------
 def query_gpt(prompt):
     openai.api_key = "YOUR_OPENAI_API_KEY"
     openai.base_url = 'https://4.0.wokaai.com/v1/'

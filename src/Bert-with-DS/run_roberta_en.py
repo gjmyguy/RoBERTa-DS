@@ -11,13 +11,11 @@ OUTPUT_FILE = ""
 TEXT_KEY = "patient"
 OUTPUT_KEY = "predict_my"
 RATIO = 0.6
-BATCH_SIZE = 4   # ✅ 批大小，可以根据显存调整
+BATCH_SIZE = 4
 
-# Qwen 模型目录
 QWEN_MODEL = ""
 DEVICE = "cuda"
 
-# ===== 加载 Qwen 模型 =====
 print("🔹 Loading Qwen model...")
 tokenizer = AutoTokenizer.from_pretrained(QWEN_MODEL, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(
@@ -39,7 +37,6 @@ def polish_with_qwen_batch(originals, drafts, ratio=0.8):
             results.append("")
             continue
 
-        # 构造输入
         text = f"Original text:{original}\n\nCompressed draft:{draft}"
         messages = [{"role": "user", "content": f"{instruction}{text}"}]
         input_text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)

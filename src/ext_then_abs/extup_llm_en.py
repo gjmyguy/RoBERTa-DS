@@ -32,18 +32,15 @@ def extup_summary(doc, model, k=None):
         C = Cn
     return [sents[i] for i in sorted(np.argsort(C)[-k:])]
 
-# ---------- Abstractive (GPT) ----------
+
 def query_gpt(prompt):
     openai.api_key = "YOUR_OPENAI_API_KEY"
     openai.base_url = 'https://4.0.wokaai.com/v1/'
-# 1.9 1.175,1.82
+
     try:
         response = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4-turbo",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.7,
-            max_tokens=512
-# max_tokens=195
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
@@ -84,17 +81,16 @@ def main():
     if torch.cuda.is_available():
         torch.cuda.reset_peak_memory_stats(device)
 
-    # 生成摘要并统计
+
     for idx, item in enumerate(tqdm(data, desc="Generating summaries", ncols=100, unit="sample")):
         src = item.get("patient", "")  
         pred = summarize_case(src, model)
         item["predict_extup"] = pred 
 
-        # 时间统计
+
         elapsed = time.time() - start_time
         avg_time = elapsed / (idx + 1)
 
-        # 显存统计
         if torch.cuda.is_available():
             mem_alloc = torch.cuda.memory_allocated(device) / 1024**2
             mem_reserved = torch.cuda.memory_reserved(device) / 1024**2

@@ -16,7 +16,6 @@ from sklearn.metrics import precision_recall_fscore_support, accuracy_score
 import swanlab
 TORCHVIEW_AVAILABLE = True
 
-# ==== 配置 ====
 MODEL_NAME = ""
 TRAIN_PATH = ""
 OUTPUT_DIR = "RoBERTa_DSF_Cn"
@@ -27,7 +26,6 @@ LR = 4e-5
 MAX_LEN = 512
 
 
-# ==== 自定义数据集 ====
 class TokenClsDataset(Dataset):
     def __init__(self, data_pt, max_len=512):
         self.input_ids = data_pt["input_ids"]
@@ -46,7 +44,7 @@ class TokenClsDataset(Dataset):
 
 data_pt = torch.load(TRAIN_PATH, weights_only=False)
 dataset = TokenClsDataset(data_pt)
-train_size = int(0.85 * len(dataset))
+train_size = int(1 * len(dataset))
 val_size = len(dataset) - train_size
 train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, val_size])
 
@@ -223,7 +221,6 @@ training_args = TrainingArguments(
 )
 
 
-# ==== 主程序 ====
 if __name__ == "__main__":
 
     trainer = Trainer(

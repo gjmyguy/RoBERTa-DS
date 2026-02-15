@@ -7,7 +7,7 @@ from transformers import (
     BertTokenizer, BertModel, Trainer, TrainingArguments
 )
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score
-import numpy as np
+
 
 
 def split_sentences(text):
@@ -84,7 +84,6 @@ class ExtSumDataset(Dataset):
         }
 
 
-#========= 模型 =========
 class ExtSummarizer(nn.Module):
     def __init__(self, pretrained="", hidden_size=768):
         super().__init__()
@@ -111,7 +110,7 @@ class ExtSummarizer(nn.Module):
         return {"loss": loss, "logits": logits}
 
 
-# ========= 评估指标 =========
+
 def compute_metrics(p):
     preds = (p.predictions > 0).astype(int)  # logits -> binary
     labels = p.label_ids
@@ -120,7 +119,6 @@ def compute_metrics(p):
     return {"accuracy": acc, "precision": precision, "recall": recall, "f1": f1}
 
 
-# ========= 训练入口 =========
 def train_model(train_file, output_dir, epochs=10, batch_size=16, lr=4e-5):
     tokenizer = BertTokenizer.from_pretrained("")
     with open(train_file, "r", encoding="utf-8") as f:

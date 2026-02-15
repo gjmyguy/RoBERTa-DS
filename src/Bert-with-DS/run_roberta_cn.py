@@ -15,7 +15,6 @@ BATCH_SIZE = 4
 QWEN_MODEL = ""
 DEVICE = "cuda"
 
-# ===== 加载 Qwen 模型 =====
 print("🔹 Loading Qwen model...")
 tokenizer = AutoTokenizer.from_pretrained(QWEN_MODEL, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(
@@ -37,14 +36,12 @@ def polish_with_qwen_batch(originals, drafts):
             results.append("")
             continue
 
-        # 构造输入
         text = f"【Original Text】：{original}\n\n【Draft】：{draft}"
         messages = [{"role": "user", "content": f"{instruction}{text}"}]
         input_text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
         model_inputs = tokenizer([input_text], return_tensors="pt").to(model.device)
 
-        # 逐条生成
         generated_ids = model.generate(
             **model_inputs,
             max_new_tokens=1024,
@@ -62,7 +59,6 @@ def polish_with_qwen_batch(originals, drafts):
     return results
 
 
-# ===== 主逻辑 =====
 def main():
     start_time = time.time()
 

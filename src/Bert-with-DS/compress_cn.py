@@ -36,7 +36,7 @@ def compress_batch(texts, ratio=RATIO):
     with torch.no_grad():
         outputs = model(**encodings)
         logits = outputs.logits  # (batch, seq_len, 2)
-        probs = torch.softmax(logits, dim=-1)[:, :, 1]  # 取第1类的概率
+        probs = torch.softmax(logits, dim=-1)[:, :, 1]
 
     for i, text in enumerate(texts):
         length = (encodings["attention_mask"][i] == 1).sum().item()

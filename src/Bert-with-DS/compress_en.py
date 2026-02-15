@@ -4,13 +4,13 @@ import numpy as np
 from transformers import AutoTokenizer, AutoModelForTokenClassification
 from train_bert_dsf_en import BertWithDSF
 
-# ========== 配置 ==========
-MODEL_PATH = "oBERTa_DSF_En"  # 训练好的 DSF 模型
+
+MODEL_PATH = "RoBERTa_DSF_En"
 RATIO = 0.6
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-# ========== 加载模型 ==========
+
 
 PRETRAINED_MODEL = "xlm_roberta-large"
 tokenizer = AutoTokenizer.from_pretrained(PRETRAINED_MODEL,local_files_only=True)
@@ -20,7 +20,6 @@ model.load_state_dict(torch.load(f"{MODEL_PATH}/pytorch_model.bin", map_location
 model.to(device)
 model.eval()
 
-# ========== 压缩函数 ==========
 def compress_batch(texts, ratio=RATIO):
 
     if not texts:
@@ -46,10 +45,9 @@ def compress_batch(texts, ratio=RATIO):
         tokens = tokenizer.convert_ids_to_tokens(encodings["input_ids"][i][:length])
         scores = probs[i, :length].cpu().numpy()
 
-        # 计算保留数量
         keep_k = max(1, int(length * ratio))
 
-        # 取分数最高的前 keep_k
+
         selected = np.argsort(scores)[-keep_k:]
         selected = sorted(selected)
 
@@ -59,13 +57,3 @@ def compress_batch(texts, ratio=RATIO):
         results.append(compressed_text)
 
     return results
-
-
-# ========== 示例 ==========
-if __name__ == "__main__":
-    texts = [
-        ""
-    ]
-    results = compress_batch(texts, ratio=0.75)
-    for r in results:
-        print(r)
