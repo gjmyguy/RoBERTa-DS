@@ -41,13 +41,11 @@ def polish_with_qwen_batch(originals, drafts, ratio=0.8):
         messages = [{"role": "user", "content": f"{instruction}{text}"}]
         input_text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
-        # 动态控制生成长度
         orig_len = len(tokenizer.encode(original, add_special_tokens=False))
         max_new_tokens = max(1, int(orig_len * ratio))
 
         model_inputs = tokenizer([input_text], return_tensors="pt").to(model.device)
 
-        # 逐条生成
         generated_ids = model.generate(
             **model_inputs,
             max_new_tokens=1024,

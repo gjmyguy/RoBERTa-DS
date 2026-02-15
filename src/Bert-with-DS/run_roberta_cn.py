@@ -72,7 +72,6 @@ def main():
         try:
             drafts = compress_batch(texts, ratio=RATIO)
         except Exception as e:
-            print(f"⚠️ 出错: {e}")
             drafts = [""] * len(texts)
 
         drafts_clean = [d.replace("[CLS]", "").replace("[SEP]", "").strip() for d in drafts]

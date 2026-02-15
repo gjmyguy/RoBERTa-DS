@@ -23,7 +23,6 @@ def compress_batch(texts, ratio=RATIO):
     if not texts:
         return []
 
-    # 批量编码
     encodings = tokenizer(
         texts,
         return_tensors="pt",
@@ -56,10 +55,3 @@ def compress_batch(texts, ratio=RATIO):
 
     return results
 
-
-# ========== 示例 ==========
-if __name__ == "__main__":
-    texts = []
-    results = compress_batch(texts, ratio=0.75)
-    for r in results:
-        print(r)
